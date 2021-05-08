@@ -1,0 +1,11 @@
+### Node modules ###
+node_modules
+
+### ENV ###
+.env
+
+### macOS ###
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
