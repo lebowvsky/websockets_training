@@ -9,6 +9,11 @@ export default class AppUserResolver {
     return AppUser.findOne(id);
   }
 
+  @Query(() => [AppUser])
+  appUsers(): Promise<AppUser[]> {
+    return AppUser.find();
+  }
+
   @Mutation(() => AppUser)
   async createAppUser(@Arg("data") data: CreateNewAppUserInput): Promise<AppUser> {
     const appUser = AppUser.create(data);

@@ -60,6 +60,9 @@ var AppUserResolver = /** @class */ (function () {
     AppUserResolver.prototype.getUserById = function (id) {
         return AppUser_1.default.findOne(id);
     };
+    AppUserResolver.prototype.appUsers = function () {
+        return AppUser_1.default.find();
+    };
     AppUserResolver.prototype.createAppUser = function (data) {
         return __awaiter(this, void 0, void 0, function () {
             var appUser;
@@ -84,6 +87,12 @@ var AppUserResolver = /** @class */ (function () {
         __metadata("design:paramtypes", [AppUserInput_1.GetAppUserByIdInput]),
         __metadata("design:returntype", Promise)
     ], AppUserResolver.prototype, "getUserById", null);
+    __decorate([
+        type_graphql_1.Query(function () { return [AppUser_1.default]; }),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", Promise)
+    ], AppUserResolver.prototype, "appUsers", null);
     __decorate([
         type_graphql_1.Mutation(function () { return AppUser_1.default; }),
         __param(0, type_graphql_1.Arg("data")),
