@@ -35,39 +35,30 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-require("reflect-metadata");
-var http_1 = require("http");
-var typeorm_1 = require("typeorm");
-var graphql_1 = require("graphql");
-var subscriptions_transport_ws_1 = require("subscriptions-transport-ws");
-var express_server_1 = require("./express-server");
-var main = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, expressServer, apolloServer, graphQLSchema, PORT, server;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
-            case 0: return [4 /*yield*/, typeorm_1.createConnection()];
+exports.getApolloServer = void 0;
+var apollo_server_express_1 = require("apollo-server-express");
+var type_graphql_1 = require("type-graphql");
+var AppUserResolver_1 = __importDefault(require("./resolvers/AppUserResolver"));
+var getApolloServer = function () { return __awaiter(void 0, void 0, void 0, function () {
+    var schema;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, type_graphql_1.buildSchema({
+                    resolvers: [AppUserResolver_1.default]
+                })];
             case 1:
-                _b.sent();
-                return [4 /*yield*/, express_server_1.getExpressServer()];
-            case 2:
-                _a = _b.sent(), expressServer = _a.expressServer, apolloServer = _a.apolloServer, graphQLSchema = _a.graphQLSchema;
-                PORT = 5001;
-                server = http_1.createServer(expressServer);
-                server.listen({ port: PORT }, function () {
-                    console.log("\uD83D\uDE80 Server ready at http://localhost:" + PORT + apolloServer.graphqlPath);
-                    new subscriptions_transport_ws_1.SubscriptionServer({
-                        execute: graphql_1.execute,
-                        subscribe: graphql_1.subscribe,
-                        schema: graphQLSchema,
-                    }, {
-                        server: server,
-                        path: apolloServer.graphqlPath,
-                    });
-                    console.log('Server has started!');
-                });
-                return [2 /*return*/];
+                schema = _a.sent();
+                return [2 /*return*/, {
+                        apolloServer: new apollo_server_express_1.ApolloServer({
+                            schema: schema,
+                        }),
+                        graphQLSchema: schema
+                    }];
         }
     });
 }); };
-main();
+exports.getApolloServer = getApolloServer;

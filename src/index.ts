@@ -1,22 +1,39 @@
 import "reflect-metadata";
-import express from "express";
-import { ApolloServer } from "apollo-server-express";
+import { createServer } from 'http';
 import { createConnection } from "typeorm";
-import { buildSchema } from "type-graphql";
+import { execute, subscribe } from 'graphql';
+import { SubscriptionServer } from "subscriptions-transport-ws";
 
-import AppUserResolver from "./resolvers/AppUserResolver";
+import {getExpressServer} from './express-server';
 
 const main = async () => {
   await createConnection();
-  const schema = await buildSchema({ resolvers: [AppUserResolver] });
-  const server = new ApolloServer({ schema });
+  
+  const {
+    expressServer,
+    apolloServer,
+    graphQLSchema,
+  } = await getExpressServer();
 
-  const app = express();
-  server.applyMiddleware({ app });
   const PORT = 5001;
-  app.listen({ port: PORT }, () =>
-    console.log(`server is ready at http://localhost:${PORT}${server.graphqlPath}`)
-  );
+
+  const server = createServer(expressServer);
+  server.listen({port: PORT}, () => {
+    console.log(`🚀 Server ready at http://localhost:${PORT}${apolloServer.graphqlPath}`);
+
+    new SubscriptionServer(
+      {
+        execute,
+        subscribe,
+        schema: graphQLSchema,
+      },
+      {
+        server: server,
+        path: apolloServer.graphqlPath,
+      }
+    )
+    console.log('Server has started!');
+  })
 };
 
 main();

@@ -63,7 +63,10 @@ var AppUserResolver = /** @class */ (function () {
     AppUserResolver.prototype.appUsers = function () {
         return AppUser_1.default.find();
     };
-    AppUserResolver.prototype.createAppUser = function (data) {
+    AppUserResolver.prototype.newAppUser = function (notificationPayload) {
+        return notificationPayload.appUser;
+    };
+    AppUserResolver.prototype.createAppUser = function (data, publishNewAppUser) {
         return __awaiter(this, void 0, void 0, function () {
             var appUser;
             return __generator(this, function (_a) {
@@ -75,6 +78,7 @@ var AppUserResolver = /** @class */ (function () {
                         return [4 /*yield*/, appUser.save()];
                     case 1:
                         _a.sent();
+                        publishNewAppUser({ appUser: appUser });
                         return [2 /*return*/, appUser];
                 }
             });
@@ -94,10 +98,19 @@ var AppUserResolver = /** @class */ (function () {
         __metadata("design:returntype", Promise)
     ], AppUserResolver.prototype, "appUsers", null);
     __decorate([
-        type_graphql_1.Mutation(function () { return AppUser_1.default; }),
-        __param(0, type_graphql_1.Arg("data")),
+        type_graphql_1.Subscription({
+            topics: 'NEW_APPUSER',
+        }),
+        __param(0, type_graphql_1.Root()),
         __metadata("design:type", Function),
-        __metadata("design:paramtypes", [AppUserInput_1.CreateNewAppUserInput]),
+        __metadata("design:paramtypes", [Object]),
+        __metadata("design:returntype", AppUser_1.default)
+    ], AppUserResolver.prototype, "newAppUser", null);
+    __decorate([
+        type_graphql_1.Mutation(function () { return AppUser_1.default; }),
+        __param(0, type_graphql_1.Arg("data")), __param(1, type_graphql_1.PubSub('NEW_APPUSER')),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [AppUserInput_1.CreateNewAppUserInput, Function]),
         __metadata("design:returntype", Promise)
     ], AppUserResolver.prototype, "createAppUser", null);
     AppUserResolver = __decorate([
