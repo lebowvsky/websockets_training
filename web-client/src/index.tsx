@@ -5,22 +5,38 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { ApolloProvider, ApolloClient, InMemoryCache, split } from "@apollo/client";
 import { createUploadLink } from "apollo-upload-client";
-import { getMainDefinition } from '@apollo/client/utilities';
+import { WebSocketLink } from '@apollo/client/link/ws';
+import { getMainDefinition } from '@apollo/client/utilities'
 
 const GRAPHQL_ENDPOINT = "/graphql";
 
 const httpLink = createUploadLink({
   uri: `http://localhost:5001${GRAPHQL_ENDPOINT}`,
-  credentials: "include",
 });
 
-// const splitLink = split(({ query }) => {
-//   const definition = getMainDefinition(query);
-//   return definition.kind === "OperationDefinition" && definition.operation === "subscription";
-// }, httpLink);
+const wsLink = new WebSocketLink({
+  uri: 'ws://localhost:5001/graphql',
+  options: {
+    reconnect: true
+  }
+});
+
+const splitLink = split(
+  ({ query }) => {
+    const definition = getMainDefinition(query);
+    return (
+      definition.kind === 'OperationDefinition' &&
+      definition.operation === 'subscription'
+    );
+  },
+  wsLink,
+  httpLink,
+);
+
+
 
 const client = new ApolloClient({
-  link: httpLink,
+  link: splitLink,
   cache: new InMemoryCache(),
 });
 

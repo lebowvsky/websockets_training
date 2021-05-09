@@ -84,6 +84,18 @@ var AppUserResolver = /** @class */ (function () {
             });
         });
     };
+    AppUserResolver.prototype.deleteAllAppUsers = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, AppUser_1.default.clear()];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/, 'Tous les AppUsers sont effacés...'];
+                }
+            });
+        });
+    };
     __decorate([
         type_graphql_1.Query(function () { return AppUser_1.default; }),
         __param(0, type_graphql_1.Arg("id")),
@@ -113,6 +125,12 @@ var AppUserResolver = /** @class */ (function () {
         __metadata("design:paramtypes", [AppUserInput_1.CreateNewAppUserInput, Function]),
         __metadata("design:returntype", Promise)
     ], AppUserResolver.prototype, "createAppUser", null);
+    __decorate([
+        type_graphql_1.Mutation(function () { return String; }),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", Promise)
+    ], AppUserResolver.prototype, "deleteAllAppUsers", null);
     AppUserResolver = __decorate([
         type_graphql_1.Resolver()
     ], AppUserResolver);

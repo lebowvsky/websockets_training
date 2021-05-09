@@ -38,4 +38,10 @@ export default class AppUserResolver {
     publishNewAppUser({ appUser })
     return appUser;
   }
+
+  @Mutation(() => String)
+  async deleteAllAppUsers() {
+    await AppUser.clear()
+    return 'Tous les AppUsers sont effacés...'
+  }
 }

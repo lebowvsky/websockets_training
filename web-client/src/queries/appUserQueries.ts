@@ -6,7 +6,16 @@ export const GET_ALL_APP_USERS = gql`
       id
       name
       email
-      password
+    }
+  }
+`;
+
+export const SUBSCRIBE_TO_NEW_APPUSER = gql`
+  subscription subscribeToNewAppUser {
+    newAppUser {
+      id
+      name
+      email
     }
   }
 `;
